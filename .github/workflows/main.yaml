@@ -69,7 +69,7 @@ jobs:
           git commit --allow-empty -m "values updated"
 
           # Include the GitHub token in the remote URL
-          git push -f origin main
+          git push -f https://${{ secrets.TOKEN }}@github.com/naveens01/chartqn.git main
 
  
       - name: Trigger Update Helm Chart Workflow
