@@ -59,6 +59,11 @@ jobs:
           targetBranch: main
           createPR: false
           message: 'Update Image Version to ${{ steps.store-ref.outputs.tag }}' 
+        
+      - name: setting auth
+        uses: actions/github-script@v5
+        with:
+            github-token: ${{ secrets.TOKEN }}
 
       - name: Commit and Push Changes
         run: |
