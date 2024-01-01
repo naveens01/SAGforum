@@ -1,0 +1,86 @@
+name: Build and Push Docker Images
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+permissions:
+  contents: write
+ 
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+ 
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v2.0
+        with:
+          version: 'v1.27.0'
+        id: install
+ 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+ 
+      - name: Login into Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+ 
+      - name: Build and Push Frontend Docker Image
+        id: build-and-push-frontend
+        run: |
+             TAG=$(echo "${{ github.ref }}" | sed 's|refs/tags/||')
+             docker build -t ${{ secrets.AWS_REGISTRY_URL }}:${TAG} ./client
+             docker push ${{ secrets.AWS_REGISTRY_URL }}:${TAG}
+             echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:${TAG}"
+
+
+      - name: Checkout Helm Chart Repository
+        uses: actions/checkout@v2
+        with:
+          repository: naveens01/chartqn
+
+      - name: Store GitHub Ref in Temp Variable
+        id: store-ref
+        run: echo "::set-output name=tag::${{ github.ref }}"
+ 
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'values.yaml'
+          propertyPath: 'frontend.image.tag'
+          value: ${{ steps.store-ref.outputs.tag }}
+          branch: main
+          targetBranch: main
+          createPR: false
+          message: 'Update Image Version to ${{ steps.store-ref.outputs.tag }}' 
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "naveens.ee20@bitsathy.ac.in"
+          git config --local user.name "naveens01"
+
+          git add ./values.yaml
+          git commit --allow-empty -m "values updated"
+
+          # Include the GitHub token in the remote URL
+          git push -f origin main
+
+ 
+      - name: Trigger Update Helm Chart Workflow
+        uses: actions/github-script@v5
+        with:
+            github-token: ${{ secrets.TOKEN }}
+            script: |
+              const result = await github.rest.actions.createWorkflowDispatch({
+                owner: 'naveens01',
+                repo: 'chartqn',
+                workflow_id: 'ch.yaml',
+                ref: 'main',
+              });
+              console.log(result);  

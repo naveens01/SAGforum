@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-backup-manual
+spec:
+  template:
+    spec:
+      containers:
+      - name: mongodb-backup-container
+        image: mongo:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - mongodump --host=mongo --port=27017 --out=/backup  # Update host and port based on your MongoDB deployment
+      restartPolicy: OnFailure
+  backoffLimit: 4

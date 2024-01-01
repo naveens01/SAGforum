@@ -1,0 +1,92 @@
+.auth-wrapper {
+  height: 100vh;
+  height: 100svh;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.auth-right,
+.auth-left {
+  border-radius: 10px;
+  flex: 1;
+}
+
+.auth-left {
+  background: orange;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-right {
+  display: flex;
+  align-items: center;
+}
+
+.company-img {
+  max-width: 300px;
+  width: 100%;
+}
+
+.auth-form {
+  max-height: 100%;
+  overflow: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+}
+.auth-form .row {
+  width: min(95%, 600px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.auth-form .row .inp-container {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.auth-form .row .inp-container label {
+  color: rgb(72, 72, 72);
+}
+
+.auth-form .row .inp-container input {
+  padding: 10px;
+  border-radius: 0;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid rgb(115, 115, 115);
+}
+
+.auth-heading {
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(0, 0, 142);
+  margin-bottom: 20px;
+}
+
+.auth-error {
+  color: red;
+  margin: 0;
+}
+
+.auth-submit {
+  background: orange;
+  align-self: flex-start;
+  border: none;
+  border-radius: 0;
+  color: white;
+  padding: 10px 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.auth-redirect {
+  color: rgb(6, 6, 189);
+}

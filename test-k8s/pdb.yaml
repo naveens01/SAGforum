@@ -1,0 +1,32 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: frontend-pdb
+spec:
+  maxUnavailable: 1
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: myapp  
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: backend-pdb
+spec:
+  maxUnavailable: 1
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: server  
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: mongo-pdb
+spec:
+  maxUnavailable: 1
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: mongo  
