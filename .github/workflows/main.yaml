@@ -43,7 +43,7 @@ jobs:
       - name: Checkout Helm Chart Repository
         uses: actions/checkout@v2
         with:
-          repository: naveens01/chartqn
+          repository: naveens01/chtest
 
       - name: Store GitHub Ref in Temp Variable
         id: store-ref
@@ -88,7 +88,7 @@ jobs:
             script: |
               const result = await github.rest.actions.createWorkflowDispatch({
                 owner: 'naveens01',
-                repo: 'chartqn',
+                repo: 'chtest',
                 workflow_id: 'ch.yaml',
                 ref: 'main',
               });
