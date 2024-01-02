@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 mongoose.set("strictQuery", false);
 require("dotenv").config()
 
-app.use(cors({origin:'https://naveen.dofreshmind.com/',credentials:true}));
+app.use(cors({origin:'http://naveen.dofreshmind.com/',credentials:true}));
 app.use(express.json());
 
 //app.use(express.static("./client/build",""))
