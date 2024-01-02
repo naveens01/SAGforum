@@ -1,0 +1,70 @@
+frontend:
+  replicaCount: 3
+  selname: myapp
+  containerName: myapp
+  image:
+    repository: 888229101819.dkr.ecr.ap-south-1.amazonaws.com/frontend
+    tag: refs/tags/v3.1.3
+    pullPolicy: Always
+  port: 3000
+  service:
+    port: 80
+    targetPort: 3000
+    type: NodePort
+backend:
+  replicas: 3
+  selname: server
+  containerName: server
+  image:
+    repository: naveens01/serverr
+    tag: latest
+    pullPolicy: Always
+  port: 5001
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 5001
+mongodbs:
+  selname: mongo
+  image:
+    repository: mongo
+    tag: latest
+  service:
+    type: LoadBalancer
+    port: 27017
+    targetPort: 27017
+  volumeMount: mongo-persistent-storage
+  storage: 1Gi
+  auth:
+    enabled: true
+cronjob:
+  schedule: 0 3 * * *
+  containerName: mongodb-backup-container
+  image:
+    repository: mongo
+    tag: latest
+  port: 27017
+  volumeMountName: backup-volume
+  restartPolicy: OnFailure
+pvc:
+  storage: 1Gi
+pdb:
+  frontend:
+    name: frontend-pdb
+    minAvailable: 1
+  backend:
+    name: backend-pdb
+    minAvailable: 1
+  mongodb:
+    name: mongodb-pdb
+    minAvailable: 1
+hpa:
+  minReplicas: 1
+  maxReplicas: 4
+  metrics:
+    name: cpu
+    target:
+      averageUtilization: 7
+      type: Utilization
+    type: Resource
+  scaletarget: server
