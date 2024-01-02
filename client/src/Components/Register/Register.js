@@ -107,7 +107,7 @@ const Register = ({ setIsLoginDisplay }) => {
       </div>
       <div className="auth-right">
         <form className="auth-form">
-          <div className="auth-heading">Create your account to login</div>
+          <div className="auth-heading">Create your account</div>
           <div className="row">
             <div className="inp-container">
               <label htmlFor="fname">Enter First Name</label>
